@@ -10,8 +10,10 @@ set (OSS_PREFIX  /NDS)
 set (SRC_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/oss)
 set (SRC_DL ${CMAKE_CURRENT_SOURCE_DIR}/dl)
 set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/oss)
-set (XHOST aarch64-linux-gnu)
-set (XARGS "--host=${XHOST}")
+# set (XHOST aarch64-linux-gnu)
+# set (XARGS "--host=${XHOST}")
+
+MESSAGE("SK: install prefix" ${CMAKE_INSTALL_PREFIX})
 
 ExternalProject_Add (
     libz
