@@ -7,8 +7,8 @@ SET(XHOST aarch64-linux-gnu)
 SET(XARGS "--host=${XHOST}")
 
 # specify the cross compiler
-SET(CMAKE_C_COMPILER   /usr/bin/aarch64-linux-gnu-gcc)
-SET(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
+SET(CMAKE_C_COMPILER   /opt/skw/linaro_aarch64_linux-2014.09_r20170413/bin/aarch64-linux-gnu-gcc)
+SET(CMAKE_CXX_COMPILER /opt/skw/linaro_aarch64_linux-2014.09_r20170413/bin/aarch64-linux-gnu-g++)
 
 # where is the target environment
 # SET(CMAKE_FIND_ROOT_PATH  /opt/eldk-2007-01-19/ppc_74xx /home/alex/eldk-ppc74xx-inst)

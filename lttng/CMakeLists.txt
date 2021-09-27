@@ -32,7 +32,7 @@ ExternalProject_Add (
     GIT_TAG                 v2.9.12
     DOWNLOAD_NO_PROGRESS    ON
     BUILD_IN_SOURCE         1
-    CONFIGURE_COMMAND       PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig ./autogen.sh --prefix=${CMAKE_INSTALL_PREFIX} --without-python --disable-tests ${XARGS}
+    CONFIGURE_COMMAND       PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig LIBS=-ldl ./autogen.sh --prefix=${CMAKE_INSTALL_PREFIX} --without-python --disable-tests ${XARGS}
     BUILD_COMMAND           make -j4
     INSTALL_COMMAND         make install
 )
@@ -44,6 +44,7 @@ ExternalProject_Add (
     GIT_REPOSITORY          git://git.liburcu.org/userspace-rcu.git
     GIT_TAG                 v0.13.0
     BUILD_IN_SOURCE         1
+    PATCH_COMMAND           patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/urcu/whitelist-skw-toolchain.patch
     CONFIGURE_COMMAND       ./bootstrap && ./configure --disable-numa --disable-man-pages --disable-tests --disable-examples --prefix=${CMAKE_INSTALL_PREFIX} ${XARGS}
     BUILD_COMMAND           make -j4
     INSTALL_COMMAND         make install
@@ -57,7 +58,8 @@ ExternalProject_Add (
     GIT_REPOSITORY          https://github.com/lttng/lttng-ust.git
     GIT_TAG                 v2.13.0
     BUILD_IN_SOURCE         1
-    CONFIGURE_COMMAND       ./bootstrap && PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig ./configure --disable-numa --disable-man-pages --disable-tests --disable-examples --prefix=${CMAKE_INSTALL_PREFIX} ${XARGS}
+    PATCH_COMMAND           patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/patches/lttng-ust/disable-tests.patch
+    CONFIGURE_COMMAND       ./bootstrap && PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig LIBS=-ldl ./configure --disable-numa --disable-man-pages --disable-tests --disable-examples --prefix=${CMAKE_INSTALL_PREFIX} ${XARGS}
     BUILD_COMMAND           make VERBOSE=1
     INSTALL_COMMAND         make install
 )
@@ -92,7 +94,7 @@ ExternalProject_Add (
     GIT_REPOSITORY          https://github.com/lttng/lttng-tools.git 
     GIT_TAG                 v2.13.0
     BUILD_IN_SOURCE         1
-    CONFIGURE_COMMAND       ./bootstrap && PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig ./configure --disable-numa --disable-man-pages --disable-tests --disable-examples --prefix=${CMAKE_INSTALL_PREFIX} ${XARGS}
+    CONFIGURE_COMMAND       ./bootstrap && PKG_CONFIG_PATH=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig LIBS=-lpthread ./configure --disable-numa --disable-man-pages --disable-tests --disable-examples --prefix=${CMAKE_INSTALL_PREFIX} ${XARGS}
     BUILD_COMMAND           make -j4
     INSTALL_COMMAND         make install
 )
