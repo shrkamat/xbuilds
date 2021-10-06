@@ -1,0 +1,90 @@
+From 10ec12dfa874ecb8ef448d8baba9c9a56bad61d6 Mon Sep 17 00:00:00 2001
+From: Shrinivas Kamath <skamath@synamedia.com>
+Date: Wed, 6 Oct 2021 17:38:48 +0530
+Subject: [PATCH] Fix: for loop initial declarations are only allowed in C99 or
+ C11 mode
+
+---
+ src/coredump/_UCD_create.c                  | 5 ++++-
+ src/coredump/_UCD_get_mapinfo_linux.c       | 9 ++++++---
+ src/coredump/_UCD_get_threadinfo_prstatus.c | 3 ++-
+ 3 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/src/coredump/_UCD_create.c b/src/coredump/_UCD_create.c
+index 9b4b7fe3..40550362 100644
+--- a/src/coredump/_UCD_create.c
++++ b/src/coredump/_UCD_create.c
+@@ -188,7 +188,9 @@ _UCD_create(const char *filename)
+ 	}
+ 
+ 	coredump_phdr_t *cur = phdrs;
+-	for (unsigned i = 0; i < size; ++i)
++    {
++      unsigned i = 0;
++	for (i = 0; i < size; ++i)
+ 	  {
+ 		if (cur->p_type == PT_LOAD)
+ 		  {
+@@ -211,6 +213,7 @@ _UCD_create(const char *filename)
+ 		Debug(2, "\n");
+ 		cur++;
+ 	  }
++    }
+ 
+     if (ui->n_threads == 0)
+       {
+diff --git a/src/coredump/_UCD_get_mapinfo_linux.c b/src/coredump/_UCD_get_mapinfo_linux.c
+index 0df2107f..89ffb1d9 100644
+--- a/src/coredump/_UCD_get_mapinfo_linux.c
++++ b/src/coredump/_UCD_get_mapinfo_linux.c
+@@ -67,6 +67,8 @@ static int
+ _handle_file_note(uint32_t n_namesz, uint32_t n_descsz, uint32_t n_type, char *name, uint8_t *desc, void *arg)
+ {
+   struct UCD_info *ui = (struct UCD_info *)arg;
++  unsigned long i = 0;
++  unsigned p = 0;
+ #ifdef NT_FILE
+   if (n_type == NT_FILE)
+   {
+@@ -78,10 +80,10 @@ _handle_file_note(uint32_t n_namesz, uint32_t n_descsz, uint32_t n_type, char *n
+     linux_mapinfo_hdr_t *mapinfo = (linux_mapinfo_hdr_t *)desc;
+     linux_mapinfo_t *maps = (linux_mapinfo_t *)(desc + mapinfo_offset);
+     char *strings = (char *)(desc + mapinfo_offset + sizeof(linux_mapinfo_t)*mapinfo->count);
+-    for (unsigned long i = 0; i < mapinfo->count; ++i)
++    for (i = 0; i < mapinfo->count; ++i)
+     {
+       size_t len = strlen(strings);
+-      for (unsigned p = 0; p < ui->phdrs_count; ++p)
++      for (p = 0; p < ui->phdrs_count; ++p)
+       {
+       	if (ui->phdrs[p].p_type == PT_LOAD
+       	  && maps[i].start >= ui->phdrs[p].p_vaddr
+@@ -114,8 +116,9 @@ int
+ _UCD_get_mapinfo(struct UCD_info *ui, coredump_phdr_t *phdrs, unsigned phdr_size)
+ {
+   int ret = UNW_ESUCCESS; /* it's OK if there are no file mappings */
++  unsigned i = 0;
+ 
+-  for (unsigned i = 0; i < phdr_size; ++i)
++  for (i = 0; i < phdr_size; ++i)
+   {
+     if (phdrs[i].p_type == PT_NOTE)
+     {
+diff --git a/src/coredump/_UCD_get_threadinfo_prstatus.c b/src/coredump/_UCD_get_threadinfo_prstatus.c
+index 45552566..b2576407 100644
+--- a/src/coredump/_UCD_get_threadinfo_prstatus.c
++++ b/src/coredump/_UCD_get_threadinfo_prstatus.c
+@@ -87,8 +87,9 @@ int
+ _UCD_get_threadinfo(struct UCD_info *ui, coredump_phdr_t *phdrs, unsigned phdr_size)
+ {
+   int ret = -UNW_ENOINFO;
++  unsigned i = 0;
+ 
+-  for (unsigned i = 0; i < phdr_size; ++i)
++  for (i = 0; i < phdr_size; ++i)
+   {
+     Debug(8, "phdr[%03d]: type:%d", i, phdrs[i].p_type);
+     if (phdrs[i].p_type == PT_NOTE)
+-- 
+2.25.1
+

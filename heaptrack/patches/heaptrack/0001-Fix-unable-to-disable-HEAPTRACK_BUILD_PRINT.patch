@@ -1,0 +1,23 @@
+From b6f3f7c0774058920d9bc9bc14a5515f9d1019ce Mon Sep 17 00:00:00 2001
+From: Shrinivas Kamath <skamath@synamedia.com>
+Date: Wed, 6 Oct 2021 21:12:04 +0530
+Subject: [PATCH] Fix unable to disable HEAPTRACK_BUILD_PRINT
+
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e01864f..d6a1aa4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -14,5 +14,5 @@ if (HEAPTRACK_BUILD_INTERPRET)
+ endif()
+ 
+ if (HEAPTRACK_BUILD_PRINT OR HEAPTRACK_BUILD_GUI)
+-    add_subdirectory(analyze)
++#    add_subdirectory(analyze)
+ endif()
+-- 
+2.25.1
+
