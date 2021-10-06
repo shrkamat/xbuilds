@@ -1,0 +1,1 @@
+https://github.com/quarnster/boxeebox-xbmc/blob/master/tools/boxeebox/libs/CMakeLists.txt
